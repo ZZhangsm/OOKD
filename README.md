@@ -97,7 +97,7 @@ python train_student.py --test_envs 0  $shared_args --seed 0 --distill DKD --pat
 where the flags are explained as:
 
 - `--path_t`: specify the path of the teacher model
-- `--s_net`: specify the student model, see 'models/__init__.py' to check the available model types.
+- `--s_net`: specify the student model, see 'model' to check the available model types.
 - `--distill`: specify the distillation method
 - `-r`: the weight of the cross-entropy loss between logit and ground truth, default: `1`
 - `-a`: the weight of the KD loss, default: `None`
