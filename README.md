@@ -6,7 +6,7 @@ This repo:
 
 
 
-![head](C:\Users\xd\Desktop\KD_exp_result\appendix\OOKD\scripts\head.png)
+![head](https://github.com/ZZhangsm/OOKD/blob/main/scripts/head.png)
 
 **benchmarks 14 knowledge distillation methods in PyTorch, including:**
 
