@@ -77,7 +77,7 @@ Our code supports the following dataset:
 dataset="PACS"
 algorithm="ERM"
 random_seed=0
-shared_args="--max_epoch 100 --net resnet18  --checkpoint_freq 1 --task img_dg --dataset $dataset --algorithm $algorithm --aug_policy default --batch_size 32 --seed $random_seed"
+shared_args="--max_epoch 100 --net resnet50  --checkpoint_freq 1 --task img_dg --dataset $dataset --algorithm $algorithm --aug_policy default --batch_size 32 --seed $random_seed"
 python train_teacher.py --lr 1e-3 --test_envs 0  --output output_dir $shared_args
 ```
 
