@@ -2,13 +2,13 @@
 
 This repo:
 
-"Revisiting Knowledge Distillation under Distribution Shift" . [Paper](https://arxiv.org/abs/2312.16242)
+"ShiftKD: Benchmarking knowledge distillation under distribution shift" . [Paper](https://doi.org/10.1016/j.neunet.2025.107838)
 
 
 
 ![head](https://github.com/ZZhangsm/OOKD/blob/main/scripts/head.png)
 
-**benchmarks 14 knowledge distillation methods in PyTorch, including:**
+**benchmarks 16 knowledge distillation methods in PyTorch, including:**
 
 - (KD) - Distilling the Knowledge in a Neural Network
 
@@ -38,7 +38,9 @@ This repo:
 
 - (DKD) - [Decoupled knowledge distillation](https://scholar.google.com/scholar_url?url=http://openaccess.thecvf.com/content/CVPR2022/html/Zhao_Decoupled_Knowledge_Distillation_CVPR_2022_paper.html&hl=zh-CN&sa=T&oi=gsb&ct=res&cd=0&d=6183306406495914013&ei=olOaZa3cO4iyyASFsIeACQ&scisig=AFWwaeZliyVWHQO4uDafgIE3EFBD)
 
-- (DiffKD) - [Knowledge Diffusion for Distillation](https://scholar.google.com/scholar_url?url=https://arxiv.org/abs/2305.15712&hl=zh-CN&sa=T&oi=gsb&ct=res&cd=0&d=4615443208731882220&ei=klOaZbXcLbSx6rQP-4Of0A4&scisig=AFWwaeYndQMZIYIxgN7PoDwmZAxc)
+- (LogitKD) - [Multi-Level Logit Distillation](https://openaccess.thecvf.com/content/CVPR2023/papers/Jin_Multi-Level_Logit_Distillation_CVPR_2023_paper.pdf)
+
+- (LSKD) - [Logit Standardization in Knowledge Distillation](https://openaccess.thecvf.com/content/CVPR2024/html/Sun_Logit_Standardization_in_Knowledge_Distillation_CVPR_2024_paper.html)
 
   
 
@@ -115,13 +117,14 @@ where the flags are explained as:
 If you find this repo useful for your research, please consider citing the paper
 
 ```
-@misc{zhang2023revisiting,
-      title={Revisiting Knowledge Distillation under Distribution Shift}, 
-      author={Songming Zhang and Ziyu Lyu and Xiaofeng Chen},
-      year={2023},
-      eprint={2312.16242},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
+@article{zhang2025shiftkd,
+  title={ShiftKD: Benchmarking knowledge distillation under distribution shift},
+  author={Zhang, Songming and Luo, Yuxiao and Lyu, Ziyu and Chen, Xiaofeng},
+  journal={Neural Networks},
+  volume={192},
+  pages={107838},
+  year={2025},
+  publisher={Elsevier}
 }
 ```
 
