@@ -2,10 +2,10 @@
 import math
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from torchvision import models
-from model import resnetv1, resnetv2, vgg, wrn
+from model import resnetv1, resnetv2,  wrn
 from model import mobilenetv3
+import timm
 
 vgg_dict = {"vgg11": models.vgg11, "vgg13": models.vgg13, "vgg16": models.vgg16, "vgg19": models.vgg19,
             "vgg11bn": models.vgg11_bn, "vgg13bn": models.vgg13_bn, "vgg16bn": models.vgg16_bn, "vgg19bn": models.vgg19_bn}
@@ -24,12 +24,6 @@ class VGGBase(nn.Module):
         self.mixstyle = None
         self.ms_layers = None
 
-
-    # def forward(self, x):
-    #     x = self.features(x)
-    #     x = x.view(x.size(0), -1)
-    #     x = self.classifier(x)
-    #     return x
 
     def forward(self, x, is_feat=False, preact=False):
         f_mid = []
@@ -50,69 +44,6 @@ class VGGBase(nn.Module):
             # return f_mid, x
         else:
             return x
-
-
-# vgg_dict = {"vgg11": vgg.vgg11, "vgg13": vgg.vgg13, "vgg16": vgg.vgg16, "vgg19": vgg.vgg19,
-#             "vgg11bn": vgg.vgg11_bn, "vgg13bn": vgg.vgg13_bn, "vgg16bn": vgg.vgg16_bn, "vgg19bn": vgg.vgg19_bn}
-# class VGGBase(nn.Module):
-#     def __init__(self, vgg_name):
-#         super(VGGBase, self).__init__()
-#         model_vgg = vgg_dict[vgg_name]()
-#         self.block0 = model_vgg.block0
-#         self.block1 = model_vgg.block1
-#         self.block2 = model_vgg.block2
-#         self.block3 = model_vgg.block3
-#         self.block4 = model_vgg.block4
-#
-#         self.pool0 = model_vgg.pool0
-#         self.pool1 = model_vgg.pool1
-#         self.pool2 = model_vgg.pool2
-#         self.pool3 = model_vgg.pool3
-#         self.pool4 = model_vgg.pool4
-#
-#         self.in_features = model_vgg.classifier.in_features
-#
-#     def forward(self, x, is_feat=False, preact=False):
-#         h = x.shape[2]
-#         x = F.relu(self.block0(x))
-#         f0 = x
-#         x = self.pool0(x)
-#         x = self.block1(x)
-#         f1_pre = x
-#         x = F.relu(x)
-#         f1 = x
-#         x = self.pool1(x)
-#         x = self.block2(x)
-#         f2_pre = x
-#         x = F.relu(x)
-#         f2 = x
-#         x = self.pool2(x)
-#         x = self.block3(x)
-#         f3_pre = x
-#         x = F.relu(x)
-#         f3 = x
-#         if h == 64:
-#             x = self.pool3(x)
-#         x = self.block4(x)
-#         f4_pre = x
-#         x = F.relu(x)
-#         f4 = x
-#         x = self.pool4(x)
-#         x = x.view(x.size(0), -1)
-#         f5 = x
-#         # x = self.classifier(x)
-#
-#         if is_feat:
-#             if preact:
-#                 return [f0, f1_pre, f2_pre, f3_pre, f4_pre, f5], x
-#             else:
-#                 return [f0, f1, f2, f3, f4, f5], x
-#         else:
-#             return x
-
-# res_dict = {"resnet18": models.resnet18, "resnet34": models.resnet34, "resnet50": models.resnet50,
-#             "resnet101": models.resnet101, "resnet152": models.resnet152, "resnext50": models.resnext50_32x4d,
-#             "resnext101": models.resnext101_32x8d}
 
 res_dict = {"resnet18": resnetv1.resnet18,
             "resnet34": resnetv1.resnet34,
@@ -150,19 +81,6 @@ class ResBase(nn.Module):
         self.avgpool = model_resnet.avgpool
         self.in_features = model_resnet.fc.in_features
 
-
-    # def forward(self, x):
-    #     x = self.conv1(x)
-    #     x = self.bn1(x)
-    #     x = self.relu(x)
-    #     x = self.maxpool(x)
-    #     x = self.layer1(x)
-    #     x = self.layer2(x)
-    #     x = self.layer3(x)
-    #     x = self.layer4(x)
-    #     x = self.avgpool(x)
-    #     x = x.view(x.size(0), -1)
-    #     return x
 
     def get_feat_modules(self):
         feat_m = nn.ModuleList([])
@@ -229,7 +147,7 @@ class DTNBase(nn.Module):
 class ResBase_cm(nn.Module):
     def __init__(self, res_name):
         super(ResBase_cm, self).__init__()
-        model_resnet = res_dict[res_name+"_cm"](pretrained=True)
+        model_resnet = res_dict[res_name+"_cm"](pretrained=False)
         self.conv1 = model_resnet.conv1_cm
         self.bn1 = model_resnet.bn1
         self.relu = model_resnet.relu
@@ -387,5 +305,132 @@ class WRNBase(nn.Module):
             return [f0, f1, f2, f3, f4], out
         else:
             return out
+        
+
+
+        
+vit_dict = {
+    # DeiT family
+    "deit_tiny": "deit_tiny_patch16_224",
+    "deit_small": "deit_small_patch16_224",
+    "deit_base": "deit_base_patch16_224",
+    # ViT family
+    "vit_tiny": "vit_tiny_patch16_224",
+    # ConvNeXt family
+    "convnext_tiny": "convnext_tiny",
+    "convnext_small": "convnext_small",
+    "convnext_base": "convnext_base",
+    # MobileViT
+    "mobilevit_s": "mobilevit_s.cvnets_in1k",
+}
+
+class BaseVisionTransformer(nn.Module):
+    """ViT/DeiT 的基类"""
+    def __init__(self, model_name, pretrained=True):
+        super().__init__()
+        self.model = timm.create_model(vit_dict[model_name], pretrained=pretrained)
+        
+        # 提取公共组件
+        self.patch_embed = self.model.patch_embed
+        self.cls_token = self.model.cls_token
+        self.pos_embed = self.model.pos_embed
+        self.pos_drop = self.model.pos_drop
+        self.blocks = self.model.blocks
+        self.norm = self.model.norm
+        self.pre_logits = getattr(self.model, 'pre_logits', nn.Identity())
+        self.head = self.model.head
+        self.in_features = self.head.in_features
+
+    def forward(self, x, is_feat=False, preact=False):
+        B = x.shape[0]
+        x = self.patch_embed(x)
+        cls_token = self.cls_token.expand(B, -1, -1)
+        x = torch.cat((cls_token, x), dim=1)
+        x = x + self.pos_embed
+        x = self.pos_drop(x)
+
+        features = []
+        for blk in self.blocks:
+            x = blk(x)
+            features.append(x[:, 0])
+
+        x = self.norm(x)
+        x = x[:, 0]
+        x = self.pre_logits(x)
+
+        return (features, x) if is_feat else x
+
+class ConvNeXt(nn.Module):
+    """ConvNeXt 实现"""
+    def __init__(self, model_name, pretrained=True):
+        super().__init__()
+        self.model = timm.create_model(vit_dict[model_name], pretrained=pretrained)
+        
+        self.stem = nn.Sequential(
+            self.model.stem,
+            self.model.stages[0]
+        )
+        self.stages = nn.ModuleList([
+            self.model.stages[1],
+            self.model.stages[2],
+            self.model.stages[3],
+        ])
+        self.in_features = self.model.head.fc.in_features  # 应该是 768
+        self.norm_pre = self.model.norm_pre
+        
+    def forward(self, x, is_feat=False, preact=False):
+        features = []
+        x = self.stem(x)
+        features.append(x)
+        
+        for stage in self.stages:
+            x = stage(x)
+            features.append(x)
+
+        x = self.norm_pre(x)
+        x = x.mean(dim=(-2, -1))  
+        if is_feat:
+            pooled_features = [
+                nn.functional.adaptive_avg_pool2d(f, 1).flatten(1) 
+                for f in features
+            ]
+            return pooled_features, x
+        return x
+
+class MobileViT(nn.Module):
+    """MobileViT 实现"""
+    def __init__(self, model_name, pretrained=True):
+        super().__init__()
+        self.model = timm.create_model(vit_dict[model_name], pretrained=pretrained)
+        
+        self.features = nn.Sequential(
+            self.model.stem,  # stem layer
+            *self.model.stages,  # all stages
+            self.model.final_conv,
+        )
+        
+        self.norm = self.model.norm if hasattr(self.model, 'norm') else nn.Identity()
+        
+        self.in_features = self.model.head.fc.in_features 
+            
+    def forward(self, x, is_feat=False, preact=False):
+        features = []
+        
+        for module in self.features:
+            x = module(x)
+            features.append(x)
+            
+        x = self.norm(x)
+        x = nn.functional.adaptive_avg_pool2d(x, 1)
+        x = torch.flatten(x, 1)
+            
+        if is_feat:
+            processed_features = []
+            for feat in features:
+                feat = nn.functional.adaptive_avg_pool2d(feat, 1)
+                feat = torch.flatten(feat, 1)
+                processed_features.append(feat)
+            return processed_features, x
+        return x
 
 
