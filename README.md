@@ -1,4 +1,4 @@
-# OOKD: Knowledge Distillation under Distribution Shift
+# ShiftKD: Benchmarking knowledge distillation under distribution shift
 
 This repo:
 
