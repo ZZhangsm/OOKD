@@ -13,7 +13,8 @@ from model.util import ConvReg, LinearEmbed, Connector, Paraphraser, Translator
 from utils.util import Tee, img_param_init, print_environ, set_random_seed,\
     train_valid_target_eval_names, load_checkpoint, print_args, model_param, save_checkpoint
 
-from distiller_zoo import DistillKL, HintLoss, Attention, NSTLoss, Similarity, ABLoss, FactorTransfer
+from distiller_zoo import (LNKD, DistillKL, HintLoss, Attention, NSTLoss, Similarity,
+                           ABLoss, FactorTransfer, ReviewKD, DKD, DiffKD, LogitKD)
 from distiller_zoo import RKDLoss, PKT, Correlation, VIDLoss
 from distiller_zoo.crd_tools.criterion import CRDLoss
 
@@ -39,8 +40,8 @@ def get_args():
     parser.add_argument('--algorithm', type=str, default="ERM")
 
     parser.add_argument('--net', type=str, default='resnet18', help="featurizer")
-    parser.add_argument('--t_net', type=str, default='resnet50',
-                        help="teacher featurizer: resnet18, resnet50, resnet101")
+    parser.add_argument('--t_net', type=str, default='resnext50',
+                        help="teacher featurizer: resnet18, resnet50, resnet101, resnext50, deit_tiny, deit_small, deit_base")
     parser.add_argument('--s_net', type=str, default='resnet18',
                         help="student featurizer: resnet18, resnet50, resnet101, Mobilenetv3_small,"
                              "Mobilenetv3_large, vgg11, wrn_16_2")
@@ -65,8 +66,8 @@ def get_args():
 
     # distillation
     parser.add_argument('--distill', type=str, default='kd',
-                        choices=['kd', 'hint', 'attention', 'similarity', 'correlation', 'vid', 'crd',
-                                 'rkd', 'pkt', 'abound', 'factor', 'nst'])
+                        choices=['kd', 'hint', 'attention', 'similarity', 'correlation', 'vid', 'crd', 'LSKD',
+                                 'rkd', 'pkt', 'abound', 'factor', 'nst', 'ReviewKD', 'DKD', 'LogitKD'])
     parser.add_argument('--kd_T', type=float, default=4, help='temperature for KD distillation')
 
     parser.add_argument('-r', '--gamma', type=float, default=0.6, help='weight for classification')
